@@ -4,7 +4,7 @@ class DataCleaning:
     def __init__(self):
         pass
     ### fonction principale pour le data cleaning ###
-    def cleaning(self, df, cols_to_drop, date_column, id_columns, numeric_cols, threshold):
+    def cleaning(self, df, cols_to_drop, date_column, id_columns, numeric_cols):
         """
         Fonction principale de data cleaning qui appelle les fonctions 
         - date_to_datetime pour convertir les colonnes de date en datetime
@@ -41,10 +41,7 @@ class DataCleaning:
         df_temp = self.aggregate_duplicate_rows(df_temp, id_columns, numeric_cols)
 
         print("suppression des colonnes inutiles...")
-        df_temp = self.drop_unnecessary_columns(df_temp, cols_to_drop)
-
-        print("traitement des outliers...")
-        df_final = self.remove_outliers_from_profit(df_temp, threshold)
+        df_final = self.drop_unnecessary_columns(df_temp, cols_to_drop)
 
         print("cleaning terminé ✅")
         return df_final
@@ -132,21 +129,3 @@ class DataCleaning:
             **{col: 'sum' for col in numeric_cols},
             **{col: 'first' for col in df.columns if col not in numeric_cols + id_columns}
         })
-
-    def remove_outliers_from_profit(self, df, val_outlier):
-        """
-        Supprime les outliers de la colonne 'Profit' dans le DataFrame.
-
-        Parameters
-        ----------
-        df : pandas DataFrame
-            Le DataFrame à analyser pour les outliers dans la colonne 'Profit'.
-        val_outlier : numeric
-            Seuil en dessous duquel les valeurs de 'Profit' sont considérées comme des outliers.
-
-        Returns
-        -------
-        pandas DataFrame
-            DataFrame filtré ne contenant que les lignes où 'Profit' est supérieur ou égal à val_outlier.
-        """
-        return df[df['Profit'] >= val_outlier] # Si 'Profit' n'existe pas, on retourne df tel quel

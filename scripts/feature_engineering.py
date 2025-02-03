@@ -134,6 +134,7 @@ class FeatureEngineering:
         :param lag: Nombre de jours pour lequel on ajoute un lag sur les ventes.
         :return: DataFrame avec la colonne "Sales_lag_<lag>" ajoutée.
         """
+        df = df.sort_values(by="Order Date")
         df[f"Sales_lag_{lag}"] = df["Sales"].shift(lag)
         df = df.dropna()
         return df
